@@ -1,0 +1,69 @@
+services:
+  daemon:
+    image: mayanayza/netvisor-daemon:latest
+    container_name: netvisor-daemon
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
+    ports:
+      - "${NETVISOR_DAEMON_PORT}:60073"
+    environment:
+      NETVISOR_SERVER_URL: ${NETVISOR_SERVER_URL}
+      NETVISOR_PORT: ${NETVISOR_DAEMON_PORT}
+      NETVISOR_BIND_ADDRESS: ${NETVISOR_BIND_ADDRESS}
+      NETVISOR_NAME: ${NETVISOR_NAME}
+      NETVISOR_HEARTBEAT_INTERVAL: ${NETVISOR_HEARTBEAT_INTERVAL}
+      NETVISOR_MODE: ${NETVISOR_MODE}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${NETVISOR_DAEMON_PORT}/api/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    volumes:
+      - ${NETVISOR_DAEMON_DIR}:/root/.config/daemon
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ${NETVISOR_DB_DIR}:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - netvisor
+
+  server:
+    image: mayanayza/netvisor-server:latest
+    ports:
+      - "60072:60072"
+    environment:
+      NETVISOR_DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      NETVISOR_WEB_EXTERNAL_PATH: ${NETVISOR_WEB_EXTERNAL_PATH}
+      NETVISOR_PUBLIC_URL: ${NETVISOR_PUBLIC_URL}
+      NETVISOR_INTEGRATED_DAEMON_URL: ${NETVISOR_INTEGRATED_DAEMON_URL}
+    volumes:
+      - ${NETVISOR_SERVER_DIR}:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      daemon:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - netvisor
+
+networks:
+  netvisor:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.31.0.0/16
+          gateway: 172.31.0.1
