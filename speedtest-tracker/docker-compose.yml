@@ -1,0 +1,20 @@
+services:
+    speedtest-tracker:
+        image: lscr.io/linuxserver/speedtest-tracker:latest
+        restart: unless-stopped
+        container_name: ${CONTAINER_NAME}
+        ports:
+            - ${SPEEDTEST_TRACKER_PORT}:80
+            - ${SPEEDTEST_TRACKER_SSL_PORT}:443
+        environment:
+            - PUID=${PUID}
+            - PGID=${PGID}
+            - APP_DEBUG=${APP_DEBUG}
+            - APP_KEY=${APP_KEY}
+            - DB_CONNECTION=${DB_CONNECTION}
+            - APP_URL=${APP_URL}
+            - ASSET_URL=${ASSET_URL}
+            - TZ=${TZ}
+        volumes:
+            - ${SPEEDTEST_TRACKER_CONFIG_DIR}:/config
+            - ${SPEEDTEST_TRACKER_SSL_KEYS_DIR}:/config/keys

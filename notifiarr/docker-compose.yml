@@ -1,0 +1,16 @@
+services:
+  notifiarr:
+    container_name: ${CONTAINER_NAME}
+    network_mode: ${NETWORK_MODE}
+    hostname: notifiarr
+    image: golift/notifiarr
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+    ports:
+      - ${NOTIFIARR_PORT}:5454
+    volumes:
+      - ${NOTIFIARR_CONFIG_DIR}:/config
+      - /var/run/utmp:/var/run/utmp
+      - /etc/machine-id:/etc/machine-id
+    

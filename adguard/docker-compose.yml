@@ -1,0 +1,19 @@
+services:
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: ${CONTAINER_NAME}
+    network_mode: ${NETWORK_MODE}
+    environment:
+      - TZ=${TZ}
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 784:784/udp
+      - 853:853/tcp
+      - 3000:3000/tcp
+      - 81:81/tcp
+      - 443:443/tcp
+    volumes:
+      - ${ADGUARD_WORK}:/work
+      - ${ADGUARD_CONF}:/conf
+    restart: unless-stopped  

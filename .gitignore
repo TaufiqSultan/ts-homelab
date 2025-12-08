@@ -1,0 +1,32 @@
+# --- OS Generated Files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- Editor/IDE directories ---
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# --- Node.js / Next.js (Important for your apps) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.next/
+dist/
+build/
+out/
+
+# --- Docker ---
+# Ignore generic docker-compose override files used for local testing
+docker-compose.override.yml
+
+# --- Logs ---
+*.log

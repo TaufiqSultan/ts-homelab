@@ -1,0 +1,14 @@
+services:
+  wizarr:
+    container_name: ${CONTAINER_NAME}
+    network_mode: ${NETWORK_MODE}
+    image: ghcr.io/wizarrrr/wizarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DISABLE_BUILTIN_AUTH=${WIZARR_DISABLE_BUILTIN_AUTH}
+      - TZ=${TZ}
+    ports:
+      - ${WIZARR_PORT}:5690
+    volumes:
+      - ${WIZARR_CONFIG_DIR}:/data

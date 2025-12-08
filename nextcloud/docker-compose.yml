@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: nextcloud-db
+    environment:
+      POSTGRES_DB: nextcloud_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ${POSTGRES_DATA_DIR}:/var/lib/postgresql/data
+    networks:
+      - nextcloud_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d nextcloud_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  redis:
+    image: redis:alpine
+    container_name: nextcloud-redis
+    networks:
+      - nextcloud_internal
+    restart: always
+
+  nextcloud:
+    image: nextcloud:stable
+    container_name: nextcloud
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=nextcloud_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - REDIS_HOST=redis
+      - OVERWRITEPROTOCOL=https
+      - OVERWRITECLIURL=https://${NEXTCLOUD_DOMAIN} 
+    volumes:
+      - ${NEXTCLOUD_DATA_DIR}:/var/www/html
+    networks:
+      - nextcloud_internal
+      - tunnel_network
+    restart: unless-stopped
+
+networks:
+  nextcloud_internal:
+    driver: bridge
+    internal: true
+  
+  tunnel_network:
+    external: true

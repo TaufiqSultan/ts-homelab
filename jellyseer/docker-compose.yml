@@ -1,0 +1,14 @@
+services:
+    jellyseerr:
+       image: fallenbagel/jellyseerr:latest
+       container_name: ${CONTAINER_NAME}
+       network_mode: ${NETWORK_MODE}
+       environment:
+            - LOG_LEVEL=${LOG_LEVEL}
+            - TZ=${TZ}
+       ports:
+            - ${JELLYSEERR_PORT}:5055
+       volumes:
+            - ${JELLYSEERR_CONFIG_DIR}:/app/config
+       restart: unless-stopped
+       
