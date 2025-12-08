@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     container_name: nextcloud-db
     environment:
       POSTGRES_DB: nextcloud_db
@@ -32,6 +32,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      collabora:
+        condition: service_started
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_DB=nextcloud_db
@@ -39,9 +41,27 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - REDIS_HOST=redis
       - OVERWRITEPROTOCOL=https
-      - OVERWRITECLIURL=https://${NEXTCLOUD_DOMAIN} 
+      - OVERWRITECLIURL=https://${NEXTCLOUD_DOMAIN}
+      - TRUSTED_PROXIES=172.23.0.0/12
+    ports:
+      - "9985:80"
     volumes:
       - ${NEXTCLOUD_DATA_DIR}:/var/www/html
+    networks:
+      - nextcloud_internal
+      - tunnel_network
+    restart: unless-stopped
+
+  collabora:
+    image: collabora/code
+    container_name: nextcloud-collabora
+    environment:
+      - domain=${NEXTCLOUD_DOMAIN_REGEX} 
+      - username=${COLLABORA_USERNAME}
+      - password=${COLLABORA_PASSWORD}
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=true
+    ports:
+      - "9980:9980"
     networks:
       - nextcloud_internal
       - tunnel_network
