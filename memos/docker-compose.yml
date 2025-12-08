@@ -27,6 +27,8 @@ services:
       - MEMOS_DSN=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
     volumes:
       - ${MEMOS_DATA_DIR}:/var/opt/memos
+    ports:
+      - "5230:5230"
     networks:
       - memos_internal
       - tunnel_network
