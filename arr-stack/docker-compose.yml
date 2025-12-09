@@ -103,6 +103,23 @@ services:
       - media_network
     restart: unless-stopped
 
+  boxarr:
+    image: ghcr.io/iongpt/boxarr:latest
+    container_name: boxarr
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - BOXARR_URL_BASE=${BOXARR_URL_BASE}
+    ports:
+      - "${BOXARR_PORT}:8888"
+    volumes:
+      - ${BOXARR_CONFIG_DIR}:/config
+    networks:
+      - media_network
+    restart: unless-stopped
+    
+
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: ${BAZARR_CONTAINER_NAME}
