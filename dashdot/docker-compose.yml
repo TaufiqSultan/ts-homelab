@@ -1,0 +1,22 @@
+services:
+  dash:
+    image: mauricenino/dashdot:latest
+    container_name: dashdot
+    restart: unless-stopped
+    privileged: true
+    environment:
+      - DASHDOT_ENABLE_CPU_TEMPS=${DASHDOT_ENABLE_CPU_TEMPS}
+      - DASHDOT_WIDGET_LIST=${DASHDOT_WIDGET_LIST}
+      - DASHDOT_ALWAYS_SHOW_PERCENTAGES=${DASHDOT_ALWAYS_SHOW_PERCENTAGES}
+      - DASHDOT_OS_LABEL_LIST=${DASHDOT_OS_LABEL_LIST}
+      - DASHDOT_CPU_LABEL_LIST=${DASHDOT_CPU_LABEL_LIST}
+      - DASHDOT_STORAGE_LABEL_LIST=${DASHDOT_STORAGE_LABEL_LIST}
+      - DASHDOT_RAM_LABEL_LIST=${DASHDOT_RAM_LABEL_LIST}
+      - DASHDOT_NETWORK_LABEL_LIST=${DASHDOT_NETWORK_LABEL_LIST}
+      - DASHDOT_ACCEPT_OOKLA_EULA=${DASHDOT_ACCEPT_OOKLA_EULA}
+      - DASHDOT_SPEED_TEST_INTERVAL=${DASHDOT_SPEED_TEST_INTERVAL}
+    ports:
+      - '${DASHDOT_PORT}:3001'
+    volumes:
+      - /:/mnt/host:ro
+      - /media/storagedrive:/mnt/host/media/storagedrive:ro
