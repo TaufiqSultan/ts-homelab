@@ -3,11 +3,11 @@ services:
     container_name: ${CONTAINER_NAME}
     image: ghcr.io/ajnart/homarr:latest
     restart: unless-stopped
-    network_mode: ${NETWORK_MODE}
     environment:
       - TZ=${TZ}
+      - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - /var/run/docker.sock:/var/run/docker.sock
       - ${HOMARR_CONFIG_DIR}:/app/data/configs
       - ${HOMARR_ICONS_DIR}:/app/public/icons
       - ${HOMARR_DATA_DIR}:/data
