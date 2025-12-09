@@ -2,40 +2,39 @@ services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: ${FLARESOLVERR_CONTAINER_NAME}
-    network_mode: ${FLARESOLVERR_NETWORK_MODE}
     environment:
       - LOG_LEVEL=${LOG_LEVEL}
-      - LOG_FILE=${LOG_FILE}
       - LOG_HTML=${LOG_HTML}
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER}
       - TZ=${TZ}
     ports:
-      - ${FLARESOLVERR_PORT}:8191
+      - "${FLARESOLVERR_PORT}:8191"
+    networks:
+      - media_network
     restart: unless-stopped
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: ${QBITTORRENT_CONTAINER_NAME}
-    network_mode: ${QBITTORRENT_NETWORK_MODE}
     environment:
       - PUID=${PUID}
       - PGID=${PGID}  
       - TZ=${TZ}
       - WEBUI_PORT=${QBITTORRENT_WEBUI_PORT}
-      - TORRENTING_PORT=${QBITTORRENT_TORRENTING_PORT}
     volumes:
-      - ${QBITTORRENT_APPDATA_DIR}:/config
+      - ${QBITTORRENT_CONFIG_DIR}:/config
       - ${DATA_DIR}:/media/storagedrive/data
     ports:
-      - ${QBITTORRENT_WEBUI_PORT}:8701
-      - ${QBITTORRENT_TORRENTING_PORT}:50413
-      - ${QBITTORRENT_TORRENTING_PORT}:50413/udp
+      - "${QBITTORRENT_WEBUI_PORT}:8701"
+      - "${QBITTORRENT_TORRENTING_PORT}:50413"
+      - "${QBITTORRENT_TORRENTING_PORT}:50413/udp"
+    networks:
+      - media_network
     restart: unless-stopped
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: ${PROWLARR_CONTAINER_NAME}
-    network_mode: ${PROWLARR_NETWORK_MODE}
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -43,13 +42,17 @@ services:
     volumes:
       - ${PROWLARR_CONFIG_DIR}:/config
     ports:
-      - ${PROWLARR_PORT}:9696
+      - "${PROWLARR_PORT}:9696"
+    networks:
+      - media_network
+    depends_on:
+      - qbittorrent
+      - flaresolverr
     restart: unless-stopped
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: ${SONARR_CONTAINER_NAME}
-    network_mode: ${SONARR_NETWORK_MODE}
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -58,13 +61,17 @@ services:
       - ${SONARR_CONFIG_DIR}:/config
       - ${DATA_DIR}:/media/storagedrive/data
     ports:
-      - ${SONARR_PORT}:8989
+      - "${SONARR_PORT}:8989"
+    networks:
+      - media_network
+    depends_on:
+      - qbittorrent
+      - flaresolverr
     restart: unless-stopped
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: ${RADARR_CONTAINER_NAME}
-    network_mode: ${RADARR_NETWORK_MODE}
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -73,13 +80,32 @@ services:
       - ${RADARR_CONFIG_DIR}:/config
       - ${DATA_DIR}:/media/storagedrive/data
     ports:
-      - ${RADARR_PORT}:7878
+      - "${RADARR_PORT}:7878"
+    networks:
+      - media_network
+    depends_on:
+      - qbittorrent
+      - flaresolverr
+    restart: unless-stopped
+
+  profilarr:
+    image: santiagosayshey/profilarr:latest
+    container_name: profilarr
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    ports:
+      - "${PROFILARR_PORT}:6868"
+    volumes:
+      - ${PROFILARR_CONFIG_DIR}:/config
+    networks:
+      - media_network
     restart: unless-stopped
 
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: ${BAZARR_CONTAINER_NAME}
-    network_mode: ${BAZARR_NETWORK_MODE}
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -88,6 +114,11 @@ services:
       - ${BAZARR_CONFIG_DIR}:/config
       - ${DATA_DIR}:/media/storagedrive/data
     ports:
-      - ${BAZARR_PORT}:6767
+      - "${BAZARR_PORT}:6767"
+    networks:
+      - media_network
     restart: unless-stopped
 
+networks:
+  media_network:
+    name: media_network
