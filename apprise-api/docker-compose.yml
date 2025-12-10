@@ -1,0 +1,21 @@
+services:
+  apprise-api:
+    image: lscr.io/linuxserver/apprise-api:latest
+    container_name: apprise-api
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - APPRISE_ATTACH_SIZE=${APPRISE_ATTACH_SIZE}
+    volumes:
+      - ${APPRISE_API_CONFIG_DIR}:/config
+      - ${APPRISE_API_ATTACHMENTS_DIR}:/attachments
+    ports:
+      - "${APPRISE_API_PORT}:8000"
+    networks:
+      - media_network
+    restart: unless-stopped
+
+networks:
+  media_network:
+    name: media_network
