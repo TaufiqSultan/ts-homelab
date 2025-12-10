@@ -15,12 +15,12 @@ services:
       ND_ENABLESHARING: ${ND_ENABLE_SHARING}
       ND_SPOTIFY_ID: ${ND_SPOTIFY_ID}
       ND_SPOTIFY_SECRET: ${ND_SPOTIFY_SECRET}
-      ND_MUSICFOLDER: /music
+      ND_MUSICFOLDER: ${ND_MUSICFOLDER}
     networks:
       - media_network
     volumes:
       - ${ND_CONFIG_DIR}:/data
-      - ${DATA_DIR}:/media/storagedrive/data:ro
+      - ${DATA_DIR}:/music:ro
 networks:
   media_network:
     name: media_network
