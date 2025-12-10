@@ -88,6 +88,22 @@ services:
       - flaresolverr
     restart: unless-stopped
 
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: ${LIDARR_CONTAINER_NAME}
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${LIDARR_CONFIG_DIR}:/config
+      - ${DATA_DIR}:/media/storagedrive/data
+    ports:
+      - "${LIDARR_PORT}:8686"
+    networks:
+      - media_network
+    restart: unless-stopped
+
   profilarr:
     image: santiagosayshey/profilarr:latest
     container_name: profilarr

@@ -1,0 +1,26 @@
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    user: ${PUID}:${PGID}
+    ports:
+      - "${ND_PORT}:4533"
+    restart: unless-stopped
+    environment:
+      ND_SCANNER_SCHEDULE: ${ND_SCANNER_SCHEDULE}
+      ND_LOGLEVEL: ${ND_LOG_LEVEL}
+      ND_SESSIONTIMEOUT: ${ND_SESSION_TIMEOUT}
+      ND_BASEURL: ${ND_BASE_URL}
+      ND_AGENTS: ${ND_AGENTS}
+      ND_ENABLESHARING: ${ND_ENABLE_SHARING}
+      ND_SPOTIFY_ID: ${ND_SPOTIFY_ID}
+      ND_SPOTIFY_SECRET: ${ND_SPOTIFY_SECRET}
+      ND_MUSICFOLDER: /music
+    networks:
+      - media_network
+    volumes:
+      - ${ND_CONFIG_DIR}:/data
+      - ${DATA_DIR}:/media/storagedrive/data:ro
+networks:
+  media_network:
+    name: media_network
