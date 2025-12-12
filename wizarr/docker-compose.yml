@@ -1,7 +1,6 @@
 services:
   wizarr:
     container_name: ${CONTAINER_NAME}
-    network_mode: ${NETWORK_MODE}
     image: ghcr.io/wizarrrr/wizarr
     environment:
       - PUID=${PUID}
@@ -10,5 +9,11 @@ services:
       - TZ=${TZ}
     ports:
       - ${WIZARR_PORT}:5690
+    networks:
+      - media_network
     volumes:
       - ${WIZARR_CONFIG_DIR}:/data
+
+networks:
+  media_network:
+    name: media_network
