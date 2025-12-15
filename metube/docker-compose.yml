@@ -16,7 +16,7 @@ services:
     networks:
       - media_network
     volumes:
-      - ${METUBE_DATA_DIR}:/downloads
+      - ${METUBE_DATA_DIR}:/media/storagedrive/data/media
 
 networks:
   media_network:
