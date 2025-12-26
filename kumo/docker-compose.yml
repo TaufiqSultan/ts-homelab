@@ -1,0 +1,9 @@
+services:
+  kumo:
+    image: ghcr.io/taufiqsultan/kumo:latest
+    container_name: kumo
+    restart: unless-stopped
+    ports:
+      - "47812:3000"
+    environment:
+      - NODE_ENV=production
