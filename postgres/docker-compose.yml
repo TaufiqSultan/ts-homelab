@@ -1,6 +1,6 @@
 services:
-  db:
-    image: ${POSTGRES_IMAGE}
+  postgres:
+    image: postgres:16-alpine
     container_name: cupidoflowers_ims_db
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -13,7 +13,7 @@ services:
     networks:
       - postgres-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d cupidoflowers-ims"]
       interval: 5s
       timeout: 5s
       retries: 5
