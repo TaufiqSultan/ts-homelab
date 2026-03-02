@@ -6,7 +6,7 @@ services:
     container_name: ninja-db
     restart: always
     env_file:
-     - /home/taufiq/docker/invoiceninja/db/.env
+     - /home/taufiq/docker/invoiceninja/app/.env
     volumes:
       - /home/taufiq/docker/invoiceninja/db:/var/lib/mysql
 
