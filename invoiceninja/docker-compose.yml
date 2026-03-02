@@ -1,12 +1,13 @@
-version: '3.8'
-
 services:
   db:
     image: mariadb:10.11
     container_name: ninja-db
     restart: always
-    env_file:
-     - /home/taufiq/docker/invoiceninja/app/.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - /home/taufiq/docker/invoiceninja/db:/var/lib/mysql
 
@@ -14,12 +15,22 @@ services:
     image: invoiceninja/invoiceninja:5
     container_name: ninja-app
     restart: always
-    env_file:
-     - /home/taufiq/docker/invoiceninja/app/.env
+    environment:
+     - APP_URL=${APP_URL}
+     - APP_KEY=${APP_KEY}
+     - DB_TYPE=${DB_TYPE}
+     - DB_STRICT=${DB_STRICT}
+     - DB_HOST=${DB_HOST}
+     - DB_DATABASE=${DB_DATABASE}
+     - DB_USERNAME=${DB_USERNAME}
+     - DB_PASSWORD=${DB_PASSWORD}
+     - IN_USER_EMAIL=${IN_USER_EMAIL}
+     - IN_PASSWORD=${IN_PASSWORD}
+     - TRUSTED_PROXIES=${TRUSTED_PROXIES}
+     - REQUIRE_HTTPS=${REQUIRE_HTTPS}
     volumes:
       - /home/taufiq/docker/invoiceninja/app/public:/var/www/app/public
       - /home/taufiq/docker/invoiceninja/app/storage:/var/www/app/storage
-      - /home/taufiq/docker/invoiceninja/app/.env:/var/www/app/.env
     depends_on:
       - db
 
