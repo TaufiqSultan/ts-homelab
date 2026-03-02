@@ -28,6 +28,14 @@ services:
      - IN_PASSWORD=${IN_PASSWORD}
      - TRUSTED_PROXIES=${TRUSTED_PROXIES}
      - REQUIRE_HTTPS=${REQUIRE_HTTPS}
+     - MAIL_MAILER=${MAIL_MAILER}
+     - MAIL_HOST=${MAIL_HOST}
+     - MAIL_PORT=${MAIL_PORT}
+     - MAIL_USERNAME=${MAIL_USERNAME}
+     - MAIL_PASSWORD=${MAIL_PASSWORD}
+     - MAIL_ENCRYPTION=${MAIL_ENCRYPTION}
+     - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
+     - MAIL_FROM_NAME=${MAIL_FROM_NAME}
     volumes:
       - /home/taufiq/docker/invoiceninja/app/public:/var/www/app/public
       - /home/taufiq/docker/invoiceninja/app/storage:/var/www/app/storage
