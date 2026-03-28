@@ -8,6 +8,7 @@ services:
       - NODE_ENV=production
       - JWT_SECRET=${NOMAD_JWT_SECRET}
       - PORT=${NOMAD_PORT}
+      - HOST=${HOST}
     volumes:
       - ${NOMAD_DATA_DIR}:/app/data
       - ${NOMAD_UPLOAD_DIR}:/app/uploads
