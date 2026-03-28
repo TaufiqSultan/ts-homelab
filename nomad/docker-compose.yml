@@ -1,6 +1,6 @@
 services:
   app:
-    image: mauriceboe/nomad:2.5.5
+    image: mauriceboe/nomad:latest
     container_name: nomad
     ports:
       - "${NOMAD_PORT}:3000"
@@ -11,7 +11,6 @@ services:
     volumes:
       - ${NOMAD_DATA_DIR}:/app/data
       - ${NOMAD_UPLOAD_DIR}:/app/uploads
-    network_mode: ${NETWORK_MODE}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
