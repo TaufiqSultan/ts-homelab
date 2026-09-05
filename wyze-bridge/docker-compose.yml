@@ -5,7 +5,7 @@ services:
         image: mrlt8/wyze-bridge:latest
         ports:
             - 1935:1935 # RTMP
-            - 8554:8554 # RTSP
+            - 8555:8554 # RTSP
             - 8888:8888 # HLS
             - 8889:8889 #WebRTC
             - 8189:8189/udp # WebRTC/ICE
