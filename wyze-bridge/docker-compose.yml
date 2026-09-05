@@ -19,8 +19,8 @@ services:
             - API_ID=
             - API_KEY= 
             # [OPTIONAL] IP Address of the host to enable WebRTC e.g.,:
-            # - WB_IP=192.168.1.122
+            - WB_IP=192.168.50.245
             # WebUI and Stream authentication:
-            - WB_AUTH=True # Set to false to disable web and stream auth.
+            - WB_AUTH=False # Set to false to disable web and stream auth.
             # WB_USERNAME=
             # WB_PASSWORD=
