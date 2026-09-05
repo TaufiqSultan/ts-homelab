@@ -1,0 +1,32 @@
+services:
+  gladys:
+    image: gladysassistant/gladys:v5
+    container_name: gladys
+    restart: always
+    privileged: true
+    network_mode: host
+    cgroup: host
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+    environment:
+      NODE_ENV: production
+      SQLITE_FILE_PATH: /var/lib/gladysassistant/gladys-production.db
+      SERVER_PORT: 40690
+      TZ: America/Argentina/Buenos_Aires
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/gladysassistant:/var/lib/gladysassistant
+      - /dev:/dev
+      - /run/udev:/run/udev:ro
+      # Host system bus: reboot/shutdown from the System settings, and the
+      # prerequisite for Bluetooth (Matter BLE pairing, Bluetooth sensors)
+      - /run/dbus:/run/dbus:ro
+  watchtower:
+    image: nickfedor/watchtower
+    restart: always
+    container_name: watchtower
+    command: --cleanup --include-restarting
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
